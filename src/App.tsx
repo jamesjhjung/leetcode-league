@@ -1,5 +1,3 @@
-import React from 'react';
-
 // 1. Data Contract (TypeScript Interface)
 interface UserStats {
   id: string;
