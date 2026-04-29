@@ -19,31 +19,41 @@ function App() {
   // 2. The Fetch Function: This talks to the LeetCode API
   const fetchGroupStats = async () => {
     setLoading(true);
-    
-    const usernames = ["jamesjhjung"]; 
-    
+    const usernames = ["jamesjhjung", "leet_dev_vancouver"]; // Use real handles here!
+
     try {
       const results = await Promise.all(
-        usernames.map(async (username, index) => {
-          const response = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
-          const data = await response.json();
-          
-          return {
-            id: username,
-            username: username,
-            rank: index + 1,
-            totalSolved: data.totalSolved || 0,
-            easy: data.easySolved || 0,
-            medium: data.mediumSolved || 0,
-            hard: data.hardSolved || 0,
-          };
+        usernames.map(async (username) => {
+          try {
+            const response = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+            const data = await response.json();
+
+            // Check if the API actually returned a success status
+            if (data.status === "success") {
+              return {
+                id: username,
+                username: username,
+                rank: 0, 
+                totalSolved: data.totalSolved || 0,
+                easy: data.easySolved || 0,
+                medium: data.mediumSolved || 0,
+                hard: data.hardSolved || 0,
+              };
+            }
+            return null; // Ignore users that don't exist
+          } catch (e) {
+            return null;
+          }
         })
       );
 
-      const sortedResults = results.sort((a, b) => b.totalSolved - a.totalSolved);
-      setUsers(sortedResults);
+      // Filter out the 'null' results and then sort
+      const validUsers = results.filter((u): u is UserStats => u !== null);
+      const sorted = validUsers.sort((a, b) => b.totalSolved - a.totalSolved);
+      
+      setUsers(sorted);
     } catch (error) {
-      console.error("Error fetching LeetCode data:", error);
+      console.error("Critical Fetch Error:", error);
     } finally {
       setLoading(false);
     }
