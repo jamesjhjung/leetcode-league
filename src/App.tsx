@@ -19,16 +19,19 @@ function App() {
   // 2. The Fetch Function: This talks to the LeetCode API
   const fetchGroupStats = async () => {
     setLoading(true);
-    const usernames = ["jamesjhjung", "leet_dev_vancouver"]; // Use real handles here!
+    // Ensure these are real, public usernames
+    const usernames = ["jamesjhjung", "leet_dev_vancouver"]; 
 
     try {
       const results = await Promise.all(
         usernames.map(async (username) => {
           try {
             const response = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+            
+            if (!response.ok) throw new Error("API Limit");
+            
             const data = await response.json();
 
-            // Check if the API actually returned a success status
             if (data.status === "success") {
               return {
                 id: username,
@@ -40,18 +43,22 @@ function App() {
                 hard: data.hardSolved || 0,
               };
             }
-            return null; // Ignore users that don't exist
+            return null;
           } catch (e) {
+            console.error(`Failed for ${username}:`, e);
             return null;
           }
         })
       );
 
-      // Filter out the 'null' results and then sort
       const validUsers = results.filter((u): u is UserStats => u !== null);
-      const sorted = validUsers.sort((a, b) => b.totalSolved - a.totalSolved);
       
-      setUsers(sorted);
+      if (validUsers.length === 0) {
+        // DEBUG FALLBACK: If API fails, show a dummy user so we know the UI works
+        setUsers([{ id: 'err', username: "API_ERROR_CHECK_CONSOLE", rank: 0, totalSolved: 0, easy: 0, medium: 0, hard: 0 }]);
+      } else {
+        setUsers(validUsers.sort((a, b) => b.totalSolved - a.totalSolved));
+      }
     } catch (error) {
       console.error("Critical Fetch Error:", error);
     } finally {
