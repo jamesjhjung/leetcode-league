@@ -20,7 +20,7 @@ function App() {
   const fetchGroupStats = async () => {
     setLoading(true);
     // Ensure these handles exist and are public!
-    const usernames = ["jamesjhjung", "leet_dev_vancouver"]; 
+    const usernames = ["jamesjhjung", "tourist", "neal_wu"]; 
 
     try {
       const results = await Promise.all(
