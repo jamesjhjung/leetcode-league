@@ -19,22 +19,18 @@ function App() {
   // 2. The Fetch Function: This talks to the LeetCode API
   const fetchGroupStats = async () => {
     setLoading(true);
-    // Ensure these handles exist and are public!
     const usernames = ["jamesjhjung", "tourist", "neal_wu"]; 
 
     try {
       const results = await Promise.all(
         usernames.map(async (username) => {
           try {
-            // NEW API URL
             const response = await fetch(`https://alfa-leetcode-api.onrender.com/${username}/solved`);
             
             if (!response.ok) throw new Error("Fetch failed");
             
             const data = await response.json();
 
-            // This API has a slightly different data structure:
-            // totalSolved, easySolved, mediumSolved, hardSolved
             return {
               id: username,
               username: username,
