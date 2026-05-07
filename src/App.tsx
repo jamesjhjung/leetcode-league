@@ -19,7 +19,7 @@ function App() {
   // 2. The Fetch Function: This talks to the LeetCode API
   const fetchGroupStats = async () => {
     setLoading(true);
-    const usernames: string[] = [];
+    const usernames = users.map(u => u.username); // Get current usernames to refresh their stats
 
     if (usernames.length === 0) {
       setUsers([]);
@@ -125,19 +125,31 @@ function App() {
             <p className="text-neutral-500 mt-3 text-lg">Live Classmate Leaderboard</p>
           </div>
           
-          <div className="flex gap-2">
-            <input 
-              type="text" 
-              placeholder="Enter LeetCode Handle"
-              value={newHandle}
-              onChange={(e) => setNewHandle(e.target.value)}
-              className="bg-neutral-900 border border-neutral-800 px-4 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-orange-500 transition-colors"
-            />
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Search Input Group */}
+            <div className="flex gap-2">
+              <input 
+                type="text" 
+                placeholder="Enter LeetCode Handle"
+                value={newHandle}
+                onChange={(e) => setNewHandle(e.target.value)}
+                className="bg-neutral-900 border border-neutral-800 px-4 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-orange-500 transition-colors w-full sm:w-48"
+              />
+              <button 
+                onClick={addUser}
+                className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all active:scale-95 whitespace-nowrap"
+              >
+                Add User
+              </button>
+            </div>
+
+            {/* The Return of the Refresh Button */}
             <button 
-              onClick={addUser}
-              className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all active:scale-95"
+              onClick={fetchGroupStats}
+              disabled={loading}
+              className="bg-neutral-900 border border-neutral-800 px-4 py-2 rounded-lg text-sm font-mono text-neutral-400 hover:text-white transition-colors disabled:opacity-50"
             >
-              Add User
+              {loading ? "Updating..." : "Refresh All"}
             </button>
           </div>
         </header>
