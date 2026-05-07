@@ -19,7 +19,13 @@ function App() {
   // 2. The Fetch Function: This talks to the LeetCode API
   const fetchGroupStats = async () => {
     setLoading(true);
-    const usernames = ["jamesjhjung", "tourist", "neal_wu"]; 
+    const usernames: string[] = [];
+
+    if (usernames.length === 0) {
+      setUsers([]);
+      setLoading(false);
+      return;
+    }
 
     try {
       const results = await Promise.all(
@@ -155,16 +161,25 @@ function App() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800/50">
-                {users.map((user, index) => (
-                  <tr key={user.id} className="group hover:bg-white/[0.02] transition-colors">
-                    <td className="p-5 font-mono text-neutral-500">#{index + 1}</td>
-                    <td className="p-5 font-semibold text-neutral-200">{user.username}</td>
-                    <td className="p-5 text-center font-bold text-white">{user.totalSolved}</td>
-                    <td className="p-5 text-center text-neutral-400">{user.easy}</td>
-                    <td className="p-5 text-center text-neutral-400">{user.medium}</td>
-                    <td className="p-5 text-center text-neutral-400">{user.hard}</td>
+                {users.length > 0 ? (
+                  users.map((user, index) => (
+                    <tr key={user.id} className="group hover:bg-white/[0.02] transition-colors">
+                      <td className="p-5 font-mono text-neutral-500">#{index + 1}</td>
+                      <td className="p-5 font-semibold text-neutral-200">{user.username}</td>
+                      <td className="p-5 text-center font-bold text-white">{user.totalSolved}</td>
+                      <td className="p-5 text-center text-neutral-400">{user.easy}</td>
+                      <td className="p-5 text-center text-neutral-400">{user.medium}</td>
+                      <td className="p-5 text-center text-neutral-400">{user.hard}</td>
+                    </tr>
+                  ))
+                ) : (
+                  /* This shows when the list is empty */
+                  <tr>
+                    <td colSpan={6} className="p-20 text-center text-neutral-500 italic">
+                      No classmates added yet. Use the search bar above to start the league!
+                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
