@@ -31,7 +31,7 @@ export default function App() {
         <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-orange-500/10 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="text-center max-w-md z-10">
-          <h1 className="text-6xl font-black bg-gradient-to-br from-white to-neutral-500 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-6xl font-black bg-gradient-to-br from-white to-neutral-500 bg-clip-text text-transparent tracking-tight pb-4">
             LeetCode League
           </h1>
           <p className="text-neutral-500 mt-4 text-lg">
